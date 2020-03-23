@@ -28,4 +28,9 @@ PTH.share [PTH.mkPersist PTH.sqlSettings, PTH.mkMigrate "migrateAll"] [PTH.persi
     age Int
     deriving Show Read Eq
 
+  Article sql=articles
+    title Text
+    body Text
+    publishedAt UTCTime
+    deriving Show Read Eq
 |]
