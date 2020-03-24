@@ -6,9 +6,9 @@ import Control.Monad.Logger (LoggingT)
 import           Control.Monad
 import Data.Maybe (fromJust)
 import Data.Text (Text)
-import Data.Time (UTCTime(..), Day(..))
+import Data.Time (UTCTime(..), Day(..), fromGregorian)
 import Database.Persist (insert, delete, get, selectList, Key, (<.), SelectOpt(..))
-import Database.Persist.Postgresql (SqlPersistT, Entity(..), toSqlKey, (>.), (<.), (==.))
+import Database.Persist.Postgresql (SqlPersistT, Entity(..), toSqlKey, (>.), (<.), (==.), (>=.))
 
 import Database (runAction, localConnString)
 import Schema
@@ -38,9 +38,15 @@ fetch100 = do
 lastYearsArticles :: IO [Entity Article]
 lastYearsArticles = runAction localConnString query
   where
-    query = undefined
+    query = selectList 
+                      [ ArticlePublishedAt >=. year 2018
+                      , ArticlePublishedAt <. year 2019] 
+                      [Asc ArticleTitle]
+    year n = UTCTime 
+                    { utctDay = fromGregorian n 1 1
+                    , utctDayTime = 0 } 
 
 getYoungUsers :: IO [Entity User]
 getYoungUsers = runAction localConnString query
   where
-    query = undefined
+    query = selectList [UserAge <. 23] [LimitTo 10, Desc UserName]
