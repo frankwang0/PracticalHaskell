@@ -3,6 +3,7 @@
 module Lecture5 where
 
 import Control.Monad.Logger (LoggingT)
+import           Control.Monad
 import Data.Maybe (fromJust)
 import Data.Text (Text)
 import Data.Time (UTCTime(..), Day(..))
@@ -16,24 +17,23 @@ myUser :: User
 myUser = User "Lecture 5 User" "lec5@user.com" 23
 
 insertAndPrintKey :: IO ()
-insertAndPrintKey = undefined
--- where
---  myQuery :: SqlPersistT (LoggingT IO) (Key User)
---  myQuery = undefined
--- HINT Just define this query ^^, then use `runAction localConnString myQuery`,
--- which will be a normal IO action.
+insertAndPrintKey = void $ runAction localConnString myQuery
+  where
+    myQuery :: SqlPersistT (LoggingT IO) (Key User)
+    myQuery = insert myUser
 
 deleteNewUser :: IO ()
-deleteNewUser = runAction localConnString (delete (undefined :: Key User))
+deleteNewUser = runAction localConnString myQuery
+  where 
+    myQuery = delete (toSqlKey 103 :: Key User)
 
 fetch100 :: IO (Text, UTCTime)
 fetch100 = do
   article <- runAction localConnString fetchQuery
-  -- TODO Return the title and published date!
-  return undefined
+  return (articleTitle $ fromJust article, articlePublishedAt $ fromJust article)
   where
-    -- fetchQuery :: ???
-    fetchQuery = undefined
+    fetchQuery :: SqlPersistT (LoggingT IO) (Maybe Article)
+    fetchQuery = get (toSqlKey 100)
 
 lastYearsArticles :: IO [Entity Article]
 lastYearsArticles = runAction localConnString query
