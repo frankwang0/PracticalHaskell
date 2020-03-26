@@ -3,7 +3,7 @@
 module Lecture6 where
 
 import Control.Monad (forM_)
-import Control.Monad.Logger (runStdoutLoggingT, LoggingT, LogLevel(..), filterLogger)
+import Control.Monad.Logger (runStdoutLoggingT, LoggingT, LogLevel(..), filterLogger, LogSource)
 import Control.Monad.Reader (runReaderT)
 import Data.List (sortBy)
 import Database.Persist (Entity(..), (<.), (>.), (==.), selectList, Filter(..), SelectOpt(..))
@@ -17,9 +17,8 @@ runAction :: ConnectionString -> SqlPersistT (LoggingT IO) a -> IO a
 runAction conn action = runStdoutLoggingT $
   withPostgresqlConn conn (runReaderT action)
 
--- TODO: UNCOMMENT ME!
--- logFilter :: ???
--- logFilter = undefined
+logFilter :: (LogSource -> LogLevel -> Bool) -> LoggingT m a -> LoggingT m a
+logFilter = undefined
 
 fetchSpecialUsers :: IO ()
 fetchSpecialUsers = do
