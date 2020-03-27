@@ -49,4 +49,5 @@ lastYearsArticles = runAction localConnString query
 getYoungUsers :: IO [Entity User]
 getYoungUsers = runAction localConnString query
   where
-    query = selectList [UserAge <. 23] [LimitTo 10, Desc UserName]
+    query = selectList  [UserAge <. 23] 
+                        [LimitTo 10, Desc UserName]
