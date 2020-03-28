@@ -14,11 +14,16 @@ import Database (localConnString)
 import Schema
 
 runAction :: ConnectionString -> SqlPersistT (LoggingT IO) a -> IO a
-runAction conn action = runStdoutLoggingT $
+runAction conn action = 
+  runStdoutLoggingT $ filterLogger logFilter $
   withPostgresqlConn conn (runReaderT action)
 
-logFilter :: (LogSource -> LogLevel -> Bool) -> LoggingT m a -> LoggingT m a
-logFilter = undefined
+logFilter :: a -> LogLevel -> Bool
+logFilter _ LevelError = True
+logFilter _ LevelWarn = True
+logFilter _ LevelInfo = True
+logFilter _ LevelDebug  = False 
+logFilter _ (LevelOther _) = False
 
 fetchSpecialUsers :: IO ()
 fetchSpecialUsers = do
