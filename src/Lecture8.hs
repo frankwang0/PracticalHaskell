@@ -30,7 +30,14 @@ getYoungUsers = select . from $ \user -> do
     return user
 
 getSpecialPairs :: SqlPersistT (LoggingT IO) [(Entity User, Entity Article)]
-getSpecialPairs = undefined
+getSpecialPairs = select . from $ \(InnerJoin user article) -> do
+    on (user ^. UserId ==. article ^. ArticleAuthorId)
+    where_ ((user ^. UserName `like` e) ||. (user ^. UserName `like` f)) 
+    where_ ((article ^. ArticleTitle `like` e) ||. (article ^. ArticleTitle `like` f))
+    return (user, article)
+    where 
+        e = (%) ++. val "E" ++. (%)
+        f = (%) ++. val "F" ++. (%)
 
 getCommentsFromUser :: Key User -> SqlPersistT (LoggingT IO) [Entity Comment]
 getCommentsFromUser userId = undefined
