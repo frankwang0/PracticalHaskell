@@ -10,7 +10,13 @@ import Database (runAction, localConnString)
 import Schema
 
 getCommentsFromUser :: Key User -> SqlPersistT (LoggingT IO) [Entity Comment]
-getCommentsFromUser userId = undefined
+getCommentsFromUser userId =
+    selectList
+    [CommentUserId ==. userId]
+    [Asc CommentArticleId, Desc CommentSubmittedAt]
 
 getCommentsOnUser :: Key User -> SqlPersistT (LoggingT IO) [Entity Comment]
-getCommentsOnUser userId = undefined
+getCommentsOnUser userId =
+    selectList
+    [CommentUserId ==. userId]
+    [Asc CommentSubmittedAt]

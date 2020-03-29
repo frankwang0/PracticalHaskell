@@ -22,12 +22,12 @@ library
       Database
       Schema
       SchemaTypes
-      Lecture4
-      Lecture5
-      Lecture6
-      -- Lecture7
-      -- Lecture8
-      -- Lecture9
+      -- Lecture4
+      -- Lecture5
+      -- Lecture6
+      Lecture7
+      Lecture8
+      Lecture9
       -- Lecture10
       -- Lecture11
       Utils
