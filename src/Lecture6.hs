@@ -36,4 +36,15 @@ fetchSpecialUsers = do
       [Asc UserAge]
 
 fetchSpecialPairs :: IO [(Entity User, Entity Article)]
-fetchSpecialPairs = undefined
+fetchSpecialPairs = do
+  -- users <- runAction localConnString userQuery
+  -- where
+  --   userQuery :: SqlPersistT (LoggingT IO) [Entity User]
+  --   userQuery = selectList [] []
+    
+  -- articles <- runAction localConnString articleQuery
+  -- where
+  --   articleQuery :: SqlPersistT (LoggingT IO) [Entity Article]
+  --   articleQuery = selectList [] []
+
+  return []
