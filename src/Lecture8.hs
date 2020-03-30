@@ -13,7 +13,7 @@ import Database
 import Schema
 
 year :: Integer -> UTCTime
-year n = UTCTime { utctDay = fromGregorian n 1 1, utctDayTime = 0 } 
+year n = UTCTime { utctDay = fromGregorian n 1 1, utctDayTime = 0 }
 
 lastYearsArticles :: SqlPersistT (LoggingT IO) [Entity Article]
 lastYearsArticles = select . from $ \article -> do
@@ -32,12 +32,12 @@ getYoungUsers = select . from $ \user -> do
 getSpecialPairs :: SqlPersistT (LoggingT IO) [(Entity User, Entity Article)]
 getSpecialPairs = select . from $ \(InnerJoin user article) -> do
     on (user ^. UserId ==. article ^. ArticleAuthorId)
-    where_ ((user ^. UserName `like` e) ||. (user ^. UserName `like` f)) 
-    where_ ((article ^. ArticleTitle `like` e) ||. (article ^. ArticleTitle `like` f))
+    where_ (((user ^. UserName `like` e) &&. (article ^. ArticleTitle `like` e))
+        ||. ((user ^. UserName `like` t) &&. (article ^. ArticleTitle `like` t)))
     return (user, article)
-    where 
-        e = (%) ++. val "E" ++. (%)
-        f = (%) ++. val "F" ++. (%)
+    where
+        e = val "E" ++. (%)
+        t = val "T" ++. (%)
 
 getCommentsFromUser :: Key User -> SqlPersistT (LoggingT IO) [Entity Comment]
 getCommentsFromUser userId = undefined
