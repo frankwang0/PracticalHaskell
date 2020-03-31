@@ -46,4 +46,9 @@ getCommentsFromUser userId = select . from $ \comment -> do
     return comment
 
 getCommentsOnUser :: Key User -> SqlPersistT (LoggingT IO) [Entity Comment]
-getCommentsOnUser userId = undefined
+getCommentsOnUser userId = select . from $ \ (comment `InnerJoin` article) -> do
+    on (comment ^. CommentArticleId ==. article ^. ArticleId)
+    orderBy [asc (comment ^. CommentSubmittedAt)]
+    where_ (article ^. ArticleAuthorId ==. val userId)
+    return comment
+
