@@ -40,7 +40,10 @@ getSpecialPairs = select . from $ \(InnerJoin user article) -> do
         t = val "T" ++. (%)
 
 getCommentsFromUser :: Key User -> SqlPersistT (LoggingT IO) [Entity Comment]
-getCommentsFromUser userId = undefined
+getCommentsFromUser userId = select . from $ \comment -> do
+    where_ (comment ^. CommentUserId ==. val userId)
+    orderBy [asc(comment ^. CommentArticleId), desc(comment ^. CommentSubmittedAt)]
+    return comment
 
 getCommentsOnUser :: Key User -> SqlPersistT (LoggingT IO) [Entity Comment]
 getCommentsOnUser userId = undefined
