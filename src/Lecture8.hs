@@ -3,7 +3,6 @@
 module Lecture8 where
 
 import Control.Monad.Logger (LoggingT)
-import Data.Time (UTCTime(..), Day(..))
 import Database.Persist (Entity(..), Key)
 import Database.Persist.Postgresql (SqlPersistT)
 import Database.Esqueleto
