@@ -7,7 +7,6 @@ import Database.Persist (Entity(..), Key)
 import Database.Persist.Postgresql (SqlPersistT)
 import Database.Esqueleto
 import Data.Time
-
 import Database
 import Schema
 
@@ -50,4 +49,3 @@ getCommentsOnUser userId = select . from $ \ (comment `InnerJoin` article) -> do
     orderBy [asc (comment ^. CommentSubmittedAt)]
     where_ (article ^. ArticleAuthorId ==. val userId)
     return comment
-
